@@ -25,7 +25,7 @@ public class Blood extends JavaPlugin implements Listener {
         }
 
         // Get the location where the blood particles will spawn
-        Location bloodLocationa = event.getEntity().getLocation();
+        Location bloodLocation = event.getEntity().getLocation();
         bloodLocation.setY(bloodLocation.getY() + (event.getEntity().getHeight() / 1.5));
 
         // Particle variables
