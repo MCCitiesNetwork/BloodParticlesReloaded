@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'  # Specify the version you need
-          distribution: 'adoptopenjdk'  # Specify the distribution (e.g., adoptopenjdk, zulu, etc.)
+          distribution: 'openjdk'  # Use Temurin (Adoptium's JDK distribution)
 
       - name: Build with Maven
         run: mvn clean install --batch-mode
