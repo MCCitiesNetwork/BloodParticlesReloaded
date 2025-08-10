@@ -25,7 +25,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.21.8</version> <!-- Spigot version for 1.21.8 -->
+            <version>1.21.8-R0.1-SNAPSHOT</version> <!-- Corrected Spigot version -->
             <scope>provided</scope>
         </dependency>
     </dependencies>
