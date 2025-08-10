@@ -1,9 +1,10 @@
-name: Build Spigot Plugin
+name: Build and Deploy Plugin
 
 on:
   push:
     branches:
       - main
+      - 'release/*'  # Trigger on release branches as well
   pull_request:
     branches:
       - main
@@ -13,29 +14,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out the repository
-      uses: actions/checkout@v3
+      # Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        java-version: '17'
-        distribution: 'adoptopenjdk'
+      # Set up JDK 17 (adjust to JDK version of your choice)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
 
-    - name: Cache Maven dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
+      # Cache Maven dependencies (optional, but speeds up the build)
+      - name: Cache Maven dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
-    - name: Build with Maven
-      run: mvn clean package -DskipTests
+      # Run Maven build
+      - name: Build with Maven
+        run: mvn clean install --batch-mode
 
-    - name: Upload Plugin JAR
-      uses: actions/upload-artifact@v3
-      with:
-        name: blood-plugin
-        path: target/*.jar
+      # Optionally, deploy or perform additional tasks
+      # - name: Deploy Plugin
+      #   run: ./deploy-script.sh
 
