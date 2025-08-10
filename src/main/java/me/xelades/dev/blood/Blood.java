@@ -42,7 +42,8 @@ public class Blood extends JavaPlugin implements Listener {
         // BlockData for REDSTONE_BLOCK particle
         BlockData blockData = Material.REDSTONE_BLOCK.createBlockData();
 
-        // Spawn the blood particle effect at the calculated location
+        // Spawn the BLOOD particle using BLOCK_CRACK
+        // This should work if the BLOCK_CRACK particle is available in your version
         event.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, bloodLocation, (int) particleCount, particleRange, particleRange, particleRange, blockData);
     }
 }
