@@ -42,8 +42,7 @@ public class Blood extends JavaPlugin implements Listener {
         // BlockData for REDSTONE_BLOCK particle
         BlockData blockData = Material.REDSTONE_BLOCK.createBlockData();
 
-        // Spawn the BLOOD particle using BLOCK_CRACK
-        // This should work if the BLOCK_CRACK particle is available in your version
-        event.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, bloodLocation, (int) particleCount, particleRange, particleRange, particleRange, blockData);
+        // Try using BLOCK_DUST instead of BLOCK_CRACK
+        event.getEntity().getWorld().spawnParticle(Particle.BLOCK_DUST, bloodLocation, (int) particleCount, particleRange, particleRange, particleRange, blockData);
     }
 }
