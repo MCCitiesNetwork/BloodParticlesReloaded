@@ -4,47 +4,55 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Blood extends JavaPlugin implements Listener {
+    
+    // Configuration constants
+    private static final int PARTICLE_COUNT = 15;
+    private static final double PARTICLE_RANGE = 0.3;
+    private static final double HEIGHT_OFFSET_DIVISOR = 1.5;
 
     @Override
     public void onEnable() {
         // Register the listener to listen to events
         getServer().getPluginManager().registerEvents(this, this);
+        getLogger().info("Blood has been enabled!");
+    }
+    
+    @Override
+    public void onDisable() {
+        getLogger().info("Blood has been disabled!");
     }
 
-    @EventHandler
-    public void onHit(EntityDamageByEntityEvent event) {
-        if (event.getEntity() == null || event.getDamager() == null) {
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerDamage(EntityDamageEvent event) {
+        // Only trigger for players
+        if (!(event.getEntity() instanceof Player player)) {
             return;
         }
-    
-        Location bloodLocation = event.getEntity().getLocation();
-        bloodLocation.setY(bloodLocation.getY() + (event.getEntity().getHeight() / 1.5));
-    
-        double particleMultiplier = 5.0;
-        double particleMax = 50.0;
-        double particleRange = 0.4;
-    
-        double particleCount = Math.min(event.getFinalDamage() * particleMultiplier, particleMax);
-        if (particleCount < 0) {
-            particleCount = 0;
+        
+        // Only trigger if damage was actually applied
+        if (event.getFinalDamage() <= 0) {
+            return;
         }
-    
-        BlockData blockData = Material.REDSTONE_BLOCK.createBlockData();
-    
-        // Spawn BLOCK_CRACK particle
-        event.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, bloodLocation, (int) particleCount, particleRange, particleRange, particleRange, blockData);
+        
+        spawnBloodParticles(player);
     }
-
-        // BlockData for REDSTONE_BLOCK particle
+    
+    private void spawnBloodParticles(Player player) {
+        Location bloodLocation = player.getLocation();
+        bloodLocation.setY(bloodLocation.getY() + (player.getHeight() / HEIGHT_OFFSET_DIVISOR));
+    
+        // Create redstone block data for red blood particles
         BlockData blockData = Material.REDSTONE_BLOCK.createBlockData();
-
-        // Use BLOCK_CRACK instead of BLOCK_DUST
-        event.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, bloodLocation, (int) particleCount, particleRange, particleRange, particleRange, blockData);
+    
+        // Spawn BLOCK particles for realistic blood effect
+        player.getWorld().spawnParticle(Particle.BLOCK, bloodLocation, PARTICLE_COUNT, PARTICLE_RANGE, PARTICLE_RANGE, PARTICLE_RANGE, blockData);
     }
 }
